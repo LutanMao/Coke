@@ -1,4 +1,4 @@
-package com.example.coke
+package com.mao.coke
 
 import android.os.Bundle
 
