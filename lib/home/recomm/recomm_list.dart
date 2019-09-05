@@ -42,7 +42,7 @@ class _ListContainer extends State<RecommListPage> {
                   ),
                 ));
           } else {
-            return Text(recomm.data[position].text);
+            return _buildRecommItem(recomm.data[position]);
           }
         },
         itemCount: _itemCount(),
@@ -64,6 +64,52 @@ class _ListContainer extends State<RecommListPage> {
       return 0;
     } else {
       return recomm.data.length;
+    }
+  }
+
+  Widget _buildRecommItem(DataBean dataBean) {
+    return Container(
+      margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Color(0xffcccccc),
+//        border: Border.all(width: 1, color: Colors.red),
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+      ),
+      padding: EdgeInsets.all(10),
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Image.network(dataBean.profileImage, width: 30, height: 30),
+              SizedBox(width: 10),
+              Text(dataBean.name),
+            ],
+          ),
+          _buildItemContainer(dataBean),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildItemContainer(DataBean dataBean) {
+    switch(dataBean.type) {
+      case "10": // 图片
+        return Container(
+          padding: EdgeInsets.only(top: 10),
+          child: Column(
+            children: <Widget>[
+              Text(dataBean.text, textAlign: TextAlign.left,),
+              SizedBox(height: 10),
+              Image.network(dataBean.image0),
+            ],
+          ),
+        );
+      case "41": // 视频
+        return Container(
+          child: Text("视频"),
+        );
+      default:
+        return null;
     }
   }
 }
