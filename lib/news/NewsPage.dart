@@ -1,30 +1,30 @@
-import 'package:coke/home/recomm/recomm_list.dart';
+import 'dart:convert';
+
+import 'package:coke/bean/News.dart';
+import 'package:coke/http/HttpUtil.dart';
+import 'package:coke/http/api.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
+class NewsPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _HomePage();
+    return _NewsPage();
   }
 }
 
-class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
+
+class _NewsPage extends State<NewsPage> {
+
+  News news;
   List tabs = new List<Tab>();
   TabController _tabController;
 
   @override
   void initState() {
-    tabs
-      ..add(Tab(text: "推荐"))
-      ..add(Tab(text: "新闻"))
-      ..add(Tab(text: "视频"))
-      ..add(Tab(text: "音乐"))
-      ..add(Tab(text: "小说"))
-      ..add(Tab(text: "诗词"))
-      ..add(Tab(text: "美图"));
-    _tabController = TabController(initialIndex: 0, length: tabs.length, vsync: this);
     super.initState();
+    _loadData();
   }
 
   @override
@@ -61,16 +61,18 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
         body: TabBarView(
           controller: _tabController,
           children: [
-            RecommListPage(),
-            Text("2222"),
-            Text("2222"),
-            Text("2222"),
-            Text("2222"),
-            Text("2222"),
-            Text("2222"),
+
           ],
         ),
       ),
     );
   }
+
+  _loadData() async {
+    Response response = await HttpUtil.getInstance().get(API.NEWS);
+    setState(() {
+      news = News.fromMap(json.decode(response.data));
+    });
+  }
+
 }

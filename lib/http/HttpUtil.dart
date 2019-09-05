@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:coke/http/api.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 
@@ -22,7 +23,7 @@ class HttpUtil {
     //BaseOptions、Options、RequestOptions 都可以配置参数，优先级别依次递增，且可以根据优先级别覆盖参数
     options = BaseOptions(
       //请求基地址,可以包含子路径
-      baseUrl: "",
+      baseUrl: API.BASE_URL,
       //连接服务器超时时间，单位是毫秒.
       connectTimeout: 10000,
       //响应流上前后两次接受到数据的间隔，单位为毫秒。
@@ -66,14 +67,11 @@ class HttpUtil {
     Response response;
     try {
       response = await dio.get(url, queryParameters: data, options: options, cancelToken: cancelToken);
-      print('get success---------${response.statusCode}');
-      print('get success---------${response.data}');
-
 //      response.data; 响应体
 //      response.headers; 响应头
 //      response.request; 请求体
 //      response.statusCode; 状态码
-
+      print('get success---------${response.data}');
     } on DioError catch (e) {
       print('get error---------$e');
       formatError(e);
