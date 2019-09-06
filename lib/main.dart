@@ -9,8 +9,6 @@ import 'news/NewsPage.dart';
 void main() async => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
-  MyApp() {}
-
   @override
   State<StatefulWidget> createState() {
     return _HomePageState();

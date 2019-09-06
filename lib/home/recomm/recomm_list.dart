@@ -1,11 +1,13 @@
 import 'dart:convert';
 
+import 'package:chewie/chewie.dart';
 import 'package:coke/bean/Recomm.dart';
 import 'package:coke/http/HttpUtil.dart';
 import 'package:coke/http/api.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 class RecommListPage extends StatefulWidget {
   @override
@@ -22,6 +24,11 @@ class _ListContainer extends State<RecommListPage> {
   void initState() {
     _loadData();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -69,11 +76,16 @@ class _ListContainer extends State<RecommListPage> {
 
   Widget _buildRecommItem(DataBean dataBean) {
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.all(5),
       decoration: BoxDecoration(
-        color: Color(0xffcccccc),
-//        border: Border.all(width: 1, color: Colors.red),
+        color: Color(0xffffffff),
         borderRadius: BorderRadius.all(Radius.circular(5)),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Color(0xffd0d0d0),
+            blurRadius: 5.0,
+          ),
+        ],
       ),
       padding: EdgeInsets.all(10),
       child: Column(
@@ -92,13 +104,19 @@ class _ListContainer extends State<RecommListPage> {
   }
 
   Widget _buildItemContainer(DataBean dataBean) {
-    switch(dataBean.type) {
+    switch (dataBean.type) {
       case "10": // 图片
         return Container(
           padding: EdgeInsets.only(top: 10),
           child: Column(
             children: <Widget>[
-              Text(dataBean.text, textAlign: TextAlign.left,),
+              Container(
+                width: double.infinity,
+                child: Text(
+                  dataBean.text,
+                  textAlign: TextAlign.left,
+                ),
+              ),
               SizedBox(height: 10),
               Image.network(dataBean.image0),
             ],
@@ -106,10 +124,35 @@ class _ListContainer extends State<RecommListPage> {
         );
       case "41": // 视频
         return Container(
-          child: Text("视频"),
+          padding: EdgeInsets.only(top: 10),
+          child: Column(
+            children: <Widget>[
+              Container(
+                width: double.infinity,
+                child: Text(
+                  dataBean.text,
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              SizedBox(height: 10),
+              Chewie(
+                controller: _createVideoController(dataBean),
+              ),
+            ],
+          ),
         );
       default:
         return null;
     }
+  }
+
+  ChewieController _createVideoController(DataBean dataBean) {
+    return ChewieController(
+      videoPlayerController: VideoPlayerController.network(dataBean.videouri),
+      aspectRatio: 3 / 2,
+      autoPlay: false,
+      looping: false,
+      autoInitialize: false,
+    );
   }
 }
